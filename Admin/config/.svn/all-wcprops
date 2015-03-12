@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config
+END
+sql_admin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/sql_admin.inc
+END
+jackhammer_affiliates.inc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/jackhammer_affiliates.inc
+END
+jackhammer_admin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/jackhammer_admin.inc
+END
+payment_gateway.inc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/payment_gateway.inc
+END
+xmlfeeds_admin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/xmlfeeds_admin.inc
+END
+acct_admin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/acct_admin.inc
+END
+hs_admin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/hs_admin.inc
+END
+MAIN.inc
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/eclickz/!svn/ver/48/trunk/iweb-new/dsX/Admin/config/MAIN.inc
+END
