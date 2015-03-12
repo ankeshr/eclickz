@@ -22,9 +22,10 @@
 
 		global $PROGRAMS;
 		$PROGRAMS[ 'jackhammer_affiliates' ] = "affiliate";
-
+                //
 		function config_jackhammer_affiliates ()
 		{
+                               
 				global $oSQL;
 				global $config;
 				global $language;

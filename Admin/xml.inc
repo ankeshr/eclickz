@@ -273,6 +273,7 @@
                          [IP]    -- Your visitor's IP address<br />
                          [UA]    -- Your visitor's Browser User Agent<br />
                          [REF]   -- Referring URL that asked for the feed<br />
+                         [PUBID] -- Referring XML feed provider<br />
 
                          <br /><br />
                          <b>XML Feed Type</b><br />
@@ -429,8 +430,7 @@
 
 				function save_feed ()
 				{
-                                    
-						global $iSQL;
+            global $iSQL;
 						global $CGI;
 						$message = '';
 						$engine  = $CGI[ 'engine_name' ];
@@ -438,18 +438,64 @@
 								//admin_output("ERROR", "You are not permitted to edit the default feed settings");
 								//exit;
 						}
-						$feed = new Record( array ( 'Parent' => $iSQL , 'Table' => XML_FEEDS_TABLE , 'Schema' => XML_FEEDS_TABLE , 'Lookup' => 1 , 'engine_name' => $engine ) );
-						if ( $feed->update_values ( $CGI ) ) {
-								if ( $feed->save () ) {
-										$message = "Feed Information Saved";
-								} else {
-										$message = "Error saving feed ... $feed->error_string";
-								}
-						} else {
-								$message = "Error saving feed ... $feed->error_string";
-						}
-						$this->list_feeds ( $message );
-				}
+    				$feed = new Record( array ( 'Parent' => $iSQL , 'Table' => XML_FEEDS_TABLE , 'Schema' => XML_FEEDS_TABLE , 'Lookup' => 1 , 'engine_name' => $engine ) );
+
+  if ( $feed->update_values ( $CGI ) ) {
+        if ( $feed->save () ) {
+              $linksSQL = "SELECT * FROM iweb_xml_feeds WHERE engine_name = '".$engine."'";
+              
+              $links = $iSQL->search ( array ( "SQL"=>$linksSQL, "Return"=>'set' ) );
+
+              //echo $links[0][feed_url];
+
+              $pub_id_exist_feed_url = strstr($links[0][feed_url],'PubID=');
+
+             // echo "in";
+
+             // echo $pub_id_exist_feed_url;die();
+
+             if($pub_id_exist_feed_url == ''){
+                    $affiliatelinks=$links[0][affiliate_id];
+                    $affiliateSQL = "SELECT * FROM iweb_accounts WHERE acct_id = '".$affiliatelinks."'";
+                    $afflinks = $iSQL->search ( array ( "SQL"=>$affiliateSQL, "Return"=>'set' ) );
+                    $unique_id = $afflinks[0][acct_unique_id]; 
+                    $any_parameter_exits = strstr($links[0][feed_url],'?');
+
+                    if($any_parameter_exits == ''){
+
+                          $feed_url = $links[0][feed_url]."?PubID=".$unique_id;
+                          $update_feed_url_query = "UPDATE iweb_xml_feeds SET feed_url='".$feed_url."' WHERE engine_name='".$engine."'";
+                            //echo $update_feed_url_query;
+                            //die();
+                            $val = $iSQL->run($update_feed_url_query);
+                             $message = "Feed Information Saved";
+                           // echo $val ;die();
+
+                    }else{
+                         $feed_url = $links[0][feed_url]."&PubID=".$unique_id;
+                                $update_feed_url_query = "UPDATE iweb_xml_feeds SET feed_url='".$feed_url."' WHERE engine_name='".$engine."'";
+                             //  echo $update_feed_url_query;
+                                  //die();
+                                  $val = $iSQL->run($update_feed_url_query);
+                                   $message = "Feed Information Saved";
+                                  //echo $val ;die();
+                          }
+               }else{
+
+                 $message = "Feed Information Saved";
+               }
+        }else{
+
+          $message = "Feed Information Saved";
+
+        }
+      }else{
+        $message = "Feed Information Saved";
+      }
+                    
+  $this->list_feeds ( $message );
+				
+      }
 
 				function save_wl_feed ()
 				{

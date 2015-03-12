@@ -139,86 +139,87 @@
 				}
 
 
-				// --------------------------------------------------------------------- //
-				//  List Accounts found by search
-				// --------------------------------------------------------------------- //
-				function list_accounts ()
-				{
-						ini_set ( 'memory_limit' , '2048M' );
-						set_time_limit ( 120 );
-						global $oSQL;
-						global $CGI;
-						global $SCRIPT_NAME;
-						global $language;
-						global $config;
-						$AND           = "";
-						$id            = '';
-						$email         = '';
-						$accounts_list = '';
-						if ( $CGI[ acct_type ] == "Inactive" ) {
-								$CGI[ acct_type ] = '';
-								$bad_date         = time () - 5184000; // 60 days
-								$AND              = " AND  last_visit < $bad_date ";
-						}
-						if ( $CGI[ acct_id ] ) {
-								$id = " AND acct_id LIKE '$CGI[acct_id]%' ";
-						}
-						if ( $CGI[ contact_email ] ) {
-								$email .= " AND contact_email LIKE '%$CGI[contact_email]%'";
-						}
-						if ( $CGI[ 'group' ] ) {
-								$SQL            = "SELECT DISTINCT acct_id,1 FROM " . GROUP_ASSIGNMENTS_TABLE . " WHERE group_name = '$CGI[group]'";
-								$accts          = $oSQL->search ( array ( "SQL" => $SQL , "Return" => "array" ) );
-								$valid_accounts = "'" . join ( "','" , $accts ) . "'";
-								$GROUP_AND      = " AND acct_id IN($valid_accounts)";
-						}
-						$WHERE = "WHERE 1=1 $id $email";
-						if ( $CGI[ balance ] ) {
-								$qual = ">=";
-								if ( $CGI[ balance_qualifier ] == "lesser" ) {
-										$qual = "<=";
-								}
-								$CGI[ balance ] = preg_replace ( "/\$/" , "" , $CGI[ balance ] );
-								$AND .= " AND current_balance $qual $CGI[balance] ";
-						}
-						$SQL     = "SELECT * FROM " . ACCOUNTS_TABLE . " $WHERE $AND $GROUP_AND ORDER BY acct_id ASC";
-						$results = $oSQL->search ( array ( "SQL" => $SQL ) );
-						$shown   = 0;
-						$total   = count ( $results );
-						$page    = $CGI[ page ];
-						if ( !$page ) {
-								$page = 1;
-						}
-						$start = $page - 1;
-						$start = $start * 50;
-						if ( !$start ) {
-								$start = 1;
-						}
-						$end = $start + 49;
-						if ( $end > $total ) {
-								$end = $total;
-						}
-						foreach ( $results as $account ) {
-								$shown++;
-								if ( $shown < $start ) {
-										continue;
-								}
-								if ( $shown > $end ) {
-										break;
-								}
-								$manage_bids  = "
+    // --------------------------------------------------------------------- //
+    //  List Accounts found by search
+    // --------------------------------------------------------------------- //
+    function list_accounts() {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(120);
+        global $oSQL;
+        global $CGI;
+        global $SCRIPT_NAME;
+        global $language;
+        global $config;
+        $AND = "";
+        $id = '';
+        $email = '';
+        $accounts_list = '';
+        if ($CGI[acct_type] == "Inactive") {
+            $CGI[acct_type] = '';
+            $bad_date = time() - 5184000; // 60 days
+            $AND = " AND  last_visit < $bad_date ";
+        }
+        if ($CGI[acct_id]) {
+            $id = " AND acct_id LIKE '$CGI[acct_id]%' ";
+        }
+        if ($CGI[contact_email]) {
+            $email .= " AND contact_email LIKE '%$CGI[contact_email]%'";
+        }
+        if ($CGI['group']) {
+            $SQL = "SELECT DISTINCT acct_id,1 FROM " . GROUP_ASSIGNMENTS_TABLE . " WHERE group_name = '$CGI[group]'";
+            $accts = $oSQL->search(array("SQL" => $SQL, "Return" => "array"));
+            $valid_accounts = "'" . join("','", $accts) . "'";
+            //$GROUP_AND = " AND acct_id IN($valid_accounts)";
+            $GROUP_AND = ' AND acct_type="'.$CGI[group].'"';
+        }
+        $WHERE = "WHERE 1=1 $id $email";
+        if ($CGI[balance]) {
+            $qual = ">=";
+            if ($CGI[balance_qualifier] == "lesser") {
+                $qual = "<=";
+            }
+            $CGI[balance] = preg_replace("/\$/", "", $CGI[balance]);
+            $AND .= " AND current_balance $qual $CGI[balance] ";
+        }
+        $SQL = "SELECT * FROM " . ACCOUNTS_TABLE . " $WHERE $AND $GROUP_AND ORDER BY acct_id ASC";
+        $SQL;
+        $results = $oSQL->search(array("SQL" => $SQL));
+        $shown = 0;
+        $total = count($results);
+        $page = $CGI[page];
+        if (!$page) {
+            $page = 1;
+        }
+        $start = $page - 1;
+        $start = $start * 50;
+        if (!$start) {
+            $start = 1;
+        }
+        $end = $start + 49;
+        if ($end > $total) {
+            $end = $total;
+        }
+        foreach ($results as $account) {
+            $shown++;
+            if ($shown < $start) {
+                continue;
+            }
+            if ($shown > $end) {
+                break;
+            }
+            $manage_bids = "
                    <a href='$SCRIPT_NAME?admin=hyperseek&action=manage_bids&acct_id=$account[acct_id]'>$language[manage_bids_link]</a>
                 ";
-								$SQL          = "SELECT count(*) FROM " . AFF_INFO_TABLE . " WHERE affiliate = '$account[acct_id]'";
-								$is_affiliate = $oSQL->search ( array ( "SQL" => $SQL , "Return" => "single" ) );
-								$afflink      = $language[ 'add_affiliate_link' ];
-								if ( $is_affiliate ) {
-										$afflink = $language[ 'edit_affiliate_link' ];
-								}
-								$affiliate_link = "
+            $SQL = "SELECT count(*) FROM " . AFF_INFO_TABLE . " WHERE affiliate = '$account[acct_id]'";
+            $is_affiliate = $oSQL->search(array("SQL" => $SQL, "Return" => "single"));
+            $afflink = $language['add_affiliate_link'];
+            if ($is_affiliate) {
+                $afflink = $language['edit_affiliate_link'];
+            }
+            $affiliate_link = "
                    <a href='$SCRIPT_NAME?admin=accounts&action=affiliate_edit&affiliate=$account[acct_id]'>$afflink</a>
                 ";
-								$accounts_list .= "
+            $accounts_list .= "
                       <tr>
                             <td>
                                <a href='$SCRIPT_NAME?admin=accounts&action=edit_account&acct_id=$account[acct_id]'>$language[acct_edit]</a>
@@ -248,24 +249,24 @@
                             </td>
                       </tr>
                   ";
-						}
-						$form = $this->search ( 1 );
-						## Navigation ##
-						if ( $total > 50 ) {
-								$navlinks = array ();
-								$numpages = ceil ( $total / 50 );
-								for ( $x = 1; $x <= $numpages; $x++ ) {
-										if ( $x == $page ) {
-												array_push ( $navlinks , "<b>$x</b>" );
-										} else {
-												array_push ( $navlinks , "<a href='$SCRIPT_NAME?admin=accounts&balance_qualifier=$CGI[balance_qualifier]&balance=$CGI[balance]&acct_id=$CGI[acct_id]&contact_email=$CGI[contact_email]&action=list_accounts&page=$x'>$x</a>" );
-										}
-								}
-								$navbar = "... Page: [ " . join ( " | " , $navlinks ) . " ]";
-						} else {
-								$navbar = '';
-						}
-						$output = "
+        }
+        $form = $this->search(1);
+        ## Navigation ##
+        if ($total > 50) {
+            $navlinks = array();
+            $numpages = ceil($total / 50);
+            for ($x = 1; $x <= $numpages; $x++) {
+                if ($x == $page) {
+                    array_push($navlinks, "<b>$x</b>");
+                } else {
+                    array_push($navlinks, "<a href='$SCRIPT_NAME?admin=accounts&balance_qualifier=$CGI[balance_qualifier]&balance=$CGI[balance]&acct_id=$CGI[acct_id]&contact_email=$CGI[contact_email]&action=list_accounts&page=$x'>$x</a>");
+                }
+            }
+            $navbar = "... Page: [ " . join(" | ", $navlinks) . " ]";
+        } else {
+            $navbar = '';
+        }
+        $output = "
 
                $form
 
@@ -301,22 +302,27 @@
                $navbar
                </div>
             ";
-						admin_output ( $language[ acct_list_title ] , $output );
-				}
+        admin_output($language[acct_list_title], $output);
+    }
 
-
-				// --------------------------------------------------------------------- //
+    // --------------------------------------------------------------------- //
 				//  Edit account record
 				// --------------------------------------------------------------------- //
+    
 				function edit_account ()
 				{
+                                    
 						global $CGI;
 						global $oSQL;
 						global $language;
+                                                global $SCRIPT_NAME;
+                                                
 						if ( $CGI[ action ] == "add_account" ) {
 								$record = new Record( array ( "Parent" => $oSQL , "Table" => ACCOUNTS_TABLE , "Schema" => ACCOUNTS_TABLE ) );
+                                                                $action_type='admin_add_user';
 						} else {
 								$record = new Record( array ( "Parent" => $oSQL , "Table" => ACCOUNTS_TABLE , "Schema" => ACCOUNTS_TABLE , "Lookup" => 1 , "acct_id" => $CGI[ acct_id ] ) );
+                                                                 $action_type='admin_edit_user';
 						}
 						if ( !$record->data[ create_date ] ) {
 								$record->data[ create_date ] = date ( "Ymd" );
@@ -330,8 +336,9 @@
 						$output = $this->edit_menu () . "
                 <br />
                 <blockquote>
-                  <form action='$SCRIPT_NAME' method='post'>
+                  <form action='$SCRIPT_NAME' method='GET'>
                   <table cellpadding=8 cellspacing=0 border=0>
+                  
                     <tr bgcolor='navy'><td colspan=2>
                       <font color='yellow'>
                          $language[edit_acct_title] <b>$name</b>
@@ -602,19 +609,61 @@
 				// --------------------------------------------------------------------- //
 				function save_account ()
 				{
+                                    
 						global $iSQL;
 						global $CGI;
 						global $language;
+                                                global $config;
+                                                global $SCRIPT_NAME;
+//                                                echo count($CGI);
+//                                                echo '<pre>';
+//                                                print_r($CGI);
+//                                                echo '</pre>';
 						$record = new Record( array ( "Parent" => $iSQL , "Table" => ACCOUNTS_TABLE , "Schema" => ACCOUNTS_TABLE , "Lookup" => 1 , "acct_id" => $CGI[ acct_id ] ) );
-						if ( $record->update_values ( $CGI ) ) {
-								if ( $record->save () ) {
-										$message = $language[ record_saved ];
-								} else {
-										$message = "$language[record_save_error]<pre>$record->error_text</pre>";
-								}
-						} else {
+                                                //die('Data saved');
+                                                 if($config['jackhammer_auto_approve_affiliates']=='YES')
+                                                    {
+                                                        $CGI['acct_status'] = "Y";
+                                                    }
+                                                    else {
+                                                        $CGI['acct_status'] = "N";
+                            
+                                                    }
+                                                    if($CGI['acct_type']==  'affiliate')
+                                                    {
+                                                        $typ='add_new_affiliate';
+                                                    }
+                                                    else if($CGI['acct_type']==  'advertiser'){
+                                                        $typ='add_new_adv';
+                                                    }
+                  /*                 * ********** Edited By Jit on 29-01-2015 start**************** */
+                                                    if ($record->update_values($CGI, $typ)) {
+            $inserted_user_id = $record->save();
+            if ($inserted_user_id) {
+                
+
+                $fetch_query = "SELECT `acct_type` FROM " . ACCOUNTS_TABLE . " WHERE `acct_number`=" . $inserted_user_id;
+                $role = $iSQL->search(array("SQL" => $fetch_query, "Return" => "single"));
+                if ($role == 'affiliate') {
+                    $update_unique_id = "UPDATE " . ACCOUNTS_TABLE . " SET `acct_unique_id`='pub-" . $inserted_user_id . "' WHERE `acct_number`=" . $inserted_user_id;
+                    $iSQL->run($update_unique_id);
+                }
+                else if($role == 'advertiser'){
+                    $update_unique_id = "UPDATE " . ACCOUNTS_TABLE . " SET `acct_unique_id`='adv-" . $inserted_user_id . "' WHERE `acct_number`=" . $inserted_user_id;
+                    $iSQL->run($update_unique_id);
+                }
+                /*                 * ********** Edited By Jit on 29-01-2015 end **************** */
+
+
+                $message = $language[record_saved];
+                //header('Location:'.$config[admin_url].'/'.$SCRIPT_NAME.'?admin=accounts&action=search');
+            } else {
+                $message = "$language[record_save_error]<pre>$record->error_text</pre>";
+            }
+        } else {
 								$message = "$language[record_save_error]<pre>$record->error_text</pre>";
 						}
+                                            echo $message;
 				}
 
 				function save_wl_account ()
@@ -2061,7 +2110,7 @@
 						$record->update_values ( $CGI );
 						$assigned_feeds = $record->data[ xml_feeds ];
 						$formarray      = $record->generate_form ();
-						$form           = '';						
+						$form           = '';
 						while ( list ( $prompt , $fieldinput ) = each ( $formarray ) ) {
 								if ( preg_match ( "/selected_cats/i" , $fieldinput ) ) {
 										$prompt .= "(<a href='javascript:selectcats(\"$CGI[affiliate]\")'>Choose</a>)";

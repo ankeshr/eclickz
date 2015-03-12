@@ -20,9 +20,10 @@
       ________________________________________________________________________________
    */
 
-
+ 
 		function affiliate_report ()
 		{
+                    
 				global $language;
 				$CGI[ acct_id ] = $CGI[ affiliate ];
 				$report_form    = jackhammer_report_form ( "Affiliates" );
@@ -35,6 +36,7 @@
 		// ------------------------------------------------------------------------------- //
 		function affiliate_payment_hist ()
 		{
+                    
 				global $oSQL;
 				global $CGI;
 				global $language;
@@ -46,6 +48,7 @@
 
 		function affiliate_performance_report ()
 		{
+                   
 				global $SCRIPT_NAME;
 				global $language;
 				global $oSQL;
@@ -146,9 +149,9 @@
 						$date_click_total  = 0;
 						$date_rev_total    = 0;
 						foreach ( $report_lines[ $date ] as $affiliate_id => $affinfo ) {
-								$report_lines[ $date ][ $affiliate_id ][ searches ] = sprintf ( '%5.4f' , $report_lines[ $date ][ $affiliate_id ][ searches ] );
-								$report_lines[ $date ][ $affiliate_id ][ clicks ]   = sprintf ( '%5.4f' , $report_lines[ $date ][ $affiliate_id ][ clicks ] );
-								$report_lines[ $date ][ $affiliate_id ][ revshare ] = sprintf ( '%5.4f' , $report_lines[ $date ][ $affiliate_id ][ revshare ] );
+								$report_lines[ $date ][ $affiliate_id ][ searches ] = sprintf ( '%5.3f' , $report_lines[ $date ][ $affiliate_id ][ searches ] );
+								$report_lines[ $date ][ $affiliate_id ][ clicks ]   = sprintf ( '%5.3f' , $report_lines[ $date ][ $affiliate_id ][ clicks ] );
+								$report_lines[ $date ][ $affiliate_id ][ revshare ] = sprintf ( '%5.3f' , $report_lines[ $date ][ $affiliate_id ][ revshare ] );
 								$date_search_total += $report_lines[ $date ][ $affiliate_id ][ searches ];
 								$date_click_total += $report_lines[ $date ][ $affiliate_id ][ clicks ];
 								$date_rev_total += $report_lines[ $date ][ $affiliate_id ][ revshare ];
@@ -179,9 +182,9 @@
                 ";
 						}
 						if ( !$CGI[ acct_id ] ) {
-								$date_search_total = sprintf ( "%5.4f" , $date_search_total );
-								$date_rev_total    = sprintf ( "%5.4f" , $date_rev_total );
-								$date_click_total  = sprintf ( "%5.4f" , $date_click_total );
+								$date_search_total = sprintf ( "%5.3f" , $date_search_total );
+								$date_rev_total    = sprintf ( "%5.3f" , $date_rev_total );
+								$date_click_total  = sprintf ( "%5.3f" , $date_click_total );
 								$rpt_detail .= "
                     <tr>
                        <td colspan='2' align='right' style='border-top:1px solid #e0e0e0'>
@@ -201,10 +204,10 @@
                 ";
 						}
 				}
-				$rpt_search_total = sprintf ( "%5.4f" , $rpt_search_total );
-				$rpt_rev_total    = sprintf ( "%5.4f" , $rpt_rev_total );
-				$rpt_click_total  = sprintf ( "%5.4f" , $rpt_click_total );
-				$grand_total      = sprintf ( "%5.4f" , $rpt_search_total + $rpt_click_total + $rpt_rev_total );
+				$rpt_search_total = sprintf ( "%5.3f" , $rpt_search_total );
+				$rpt_rev_total    = sprintf ( "%5.3f" , $rpt_rev_total );
+				$rpt_click_total  = sprintf ( "%5.3f" , $rpt_click_total );
+				$grand_total      = sprintf ( "%5.3f" , $rpt_search_total + $rpt_click_total + $rpt_rev_total );
 				$report           = "
              <b><u>$CGI[acct_id]</u></b>
              <blockquote>
@@ -258,6 +261,7 @@
 
 		function affiliate_performance_detail ()
 		{
+                   
 				global $SCRIPT_NAME;
 				global $language;
 				global $oSQL;
@@ -308,6 +312,7 @@
 
 		function affiliate_payment_report ( $total_only = '' )
 		{
+                     
 				global $SCRIPT_NAME;
 				global $language;
 				global $oSQL;
@@ -385,6 +390,7 @@
 
 		function pay_affiliates ()
 		{
+                    
 				global $SCRIPT_NAME;
 				global $language;
 				global $oSQL;
@@ -429,9 +435,9 @@
              ";
 								$record                                 = $oSQL->search ( array ( "SQL" => $SQL , "Return" => 'hash' ) );
 								$balance                                = ( $ahash[ $affiliate ][ balance ] + $ahash[ $affiliate ][ original_amount ] ) - $ahash[ $affiliate ][ amount ];
-								$balance                                = sprintf ( "%5.4f" , ( $balance ) );
-								$ahash[ $affiliate ][ amount ]          = sprintf ( "%5.4f" , ( $ahash[ $affiliate ][ amount ] ) );
-								$ahash[ $affiliate ][ original_amount ] = sprintf ( "%5.4f" , ( $ahash[ $affiliate ][ original_amount ] ) );
+								$balance                                = sprintf ( "%5.3f" , ( $balance ) );
+								$ahash[ $affiliate ][ amount ]          = sprintf ( "%5.3f" , ( $ahash[ $affiliate ][ amount ] ) );
+								$ahash[ $affiliate ][ original_amount ] = sprintf ( "%5.3f" , ( $ahash[ $affiliate ][ original_amount ] ) );
 								$payment                                = new Record( array ( "Parent" => $iSQL , "Table" => AFF_PAYMENTS_TABLE , "Schema" => AFF_PAYMENTS_TABLE ) );
 								$payment->data[ affiliate ]             = $affiliate;
 								$payment->data[ paid_date ]             = $paid_date;

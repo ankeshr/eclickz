@@ -33,6 +33,12 @@
 				global $config;
 				global $oSQL;
 				global $my_accounts;
+
+				// echo "<pre>";
+				// print_r($CGI);
+				// echo "</pre>";
+				// die;
+
 				// Check that sales reps using this admin center are allowed access
 				if ( count ( $my_accounts ) >= 1 && !$my_accounts[ $CGI[ acct_id ] ] ) {
 						admin_output ( "$language[manage_bids_title] $CGI[acct_id]" , $language[ acct_access_denied ] );
@@ -643,6 +649,13 @@
 				global $config;
 				global $my_accounts;
 				global $SCRIPT_NAME;
+
+
+				// echo "<pre>";
+				// print_r($CGI);
+				// echo "</pre>";
+				// die;
+
 				// Table Vars
 				$source_summary = SOURCE_SUMMARY_TABLE;
 				$aff_summary    = AFF_SUMMARY_TABLE;
@@ -768,6 +781,12 @@
 				global $config;
 				global $my_accounts;
 				global $SCRIPT_NAME;
+
+				// echo "<pre>";
+				// print_r($CGI);
+				// echo "</pre>";
+				// die;
+				
 				// Table Vars
 				$source_summary = SOURCE_SUMMARY_TABLE;
 				$aff_summary    = AFF_SUMMARY_TABLE;

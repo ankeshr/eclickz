@@ -40,6 +40,7 @@
 				global $WITH;
 				global $SCRIPT_NAME;
 				global $ADMIN_TYPE;
+				//echo "in" ; 
 				$SQL                                                                      = "SELECT template_name FROM " . TEMPLATES_TABLE . " WHERE program='jackhammer_admin' AND theme='default' AND template_type = 'EMAIL'";
 				$titles                                                                   = $oSQL->search ( array ( "SQL" => $SQL , "Return" => 'array' ) );
 				$opts                                                                     = join ( "|" , $titles );
@@ -96,6 +97,12 @@
 				$vars[ 'PPC-Fraud' ][ '80:jackhammer_fraud_search_click_ip' ]     = array ( "Ensure that the IP of the clicker matches that of the searcher" , "SELECT" , "YES|NO" , "content" );
 				$vars[ 'PPC-Fraud' ][ '81:jackhammer_fraud_positive_balance' ]    = array ( "Ignore clicks when accounts have a negative balance" , "SELECT" , "YES|NO" , "content" );
 				$vars[ 'PPC-Fraud' ][ '82:jackhammer_fraud_interim_click' ]       = array ( "Force an 'iterim click' on every paid listing" , "SELECT" , "YES|NO" , "content" );
+
+
+
+
+		        $vars[ 'PPC-Fraud' ][ '55:jackhammer_fraud_mask_referring_url' ]       = array ( "Mask Referring URL" , "SELECT" , "YES|NO" , "content" );
+
 				$vars[ 'PPC-Fraud' ][ '83:jackhammer_fraud_user_agent' ]          = array ( "Ensure a valid Browser User Agent" , "SELECT" , "YES|YES -- and Check before search|NO" , "content" );
 				$vars[ 'PPC-Fraud' ][ '84:jackhammer_fraud_browser_variables' ]   = array ( "Check for valid browser requests (environment variables that browsers send along)" , "SELECT" , "YES|YES -- and Check before search|NO" , "content" );
 				$vars[ 'PPC-Fraud' ][ '100' ]                                     = array ( "Advanced & Extra Strict Fraud Checking Options" , "HEADER" , "" , "content" );

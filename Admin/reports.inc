@@ -768,8 +768,8 @@
 						$ppc_gross = 0.00;
 						$ppc_net   = 0.00;
 						if ( $source{click_count} ) {
-								$ppc_gross = sprintf ( "%01.4f" , $source[ click_amount_gross ] / $source[ click_count ] );
-								$ppc_net   = sprintf ( "%01.4f" , $source[ click_amount_net ] / $source[ click_count ] );
+								$ppc_gross = sprintf ( "%01.3f" , $source[ click_amount_gross ] / $source[ click_count ] );
+								$ppc_net   = sprintf ( "%01.3f" , $source[ click_amount_net ] / $source[ click_count ] );
 						}
 						$SOURCE_TABLE .= "
                <tr>
@@ -799,8 +799,8 @@
 						$ppc_gross = 0.00;
 						$ppc_net   = 0.00;
 						if ( $affiliate{click_count} ) {
-								$ppc_gross = sprintf ( "%01.4f" , $affiliate[ click_amount_gross ] / $affiliate[ click_count ] );
-								$ppc_net   = sprintf ( "%01.4f" , $affiliate[ click_amount_net ] / $affiliate[ click_count ] );
+								$ppc_gross = sprintf ( "%01.3f" , $affiliate[ click_amount_gross ] / $affiliate[ click_count ] );
+								$ppc_net   = sprintf ( "%01.3f" , $affiliate[ click_amount_net ] / $affiliate[ click_count ] );
 						}
 						$AFF_TABLE .= "
                <tr>
@@ -832,15 +832,15 @@
            ";
 				}
 				$report_form = jackhammer_report_form ();
-				$total_gross = sprintf ( "%01.4f" , $total_gross );
-				$total_aff   = sprintf ( "%01.4f" , $total_aff );
+				$total_gross = sprintf ( "%01.3f" , $total_gross );
+				$total_aff   = sprintf ( "%01.3f" , $total_aff );
 				$gross_ppc   = "0.00";
 				$net_ppc     = "0.00";
 				if ( $total_clicks ) {
-						$gross_ppc = sprintf ( "%01.4f" , $total_gross / $total_clicks );
-						$net_ppc   = sprintf ( "%01.4f" , $total_aff / $total_clicks );
+						$gross_ppc = sprintf ( "%01.3f" , $total_gross / $total_clicks );
+						$net_ppc   = sprintf ( "%01.3f" , $total_aff / $total_clicks );
 				}
-				$net = sprintf ( "%01.4f" , $total_gross - $total_aff );
+				$net = sprintf ( "%01.3f" , $total_gross - $total_aff );
 
 				return "
 
@@ -1134,10 +1134,10 @@
 				$breakdown_totals = array ();
 				foreach ( $dates as $date => $vals ) {
 						$show_date                         = formatdate ( $date );
-						$dates[ $date ][ gross_total ]     = sprintf ( "%01.4f" , $dates[ $date ][ gross_total ] );
-						$dates[ $date ][ revenue_total ]   = sprintf ( "%01.4f" , $dates[ $date ][ revenue_total ] );
-						$dates[ $date ][ affiliate_total ] = sprintf ( "%01.4f" , $dates[ $date ][ affiliate_total ] );
-						$date_net                          = sprintf ( "%01.4f" , $dates[ $date ][ gross_total ] - $dates[ $date ][ affiliate_total ] );
+						$dates[ $date ][ gross_total ]     = sprintf ( "%01.3f" , $dates[ $date ][ gross_total ] );
+						$dates[ $date ][ revenue_total ]   = sprintf ( "%01.3f" , $dates[ $date ][ revenue_total ] );
+						$dates[ $date ][ affiliate_total ] = sprintf ( "%01.3f" , $dates[ $date ][ affiliate_total ] );
+						$date_net                          = sprintf ( "%01.3f" , $dates[ $date ][ gross_total ] - $dates[ $date ][ affiliate_total ] );
 						$total_clicks += $dates[ $date ][ click_count ];
 						$total_searches += $dates[ $date ][ search_count ];
 						$total_fraud += $dates[ $date ][ fraud_count ];
@@ -1160,10 +1160,10 @@
 										$breakdown = $sources;
 								}
 								foreach ( $breakdown[ $date ] as $id => $idvals ) {
-										$breakdown[ $date ][ $id ][ gross_total ]     = sprintf ( "%01.4f" , $breakdown[ $date ][ $id ][ gross_total ] );
-										$breakdown[ $date ][ $id ][ revenue_total ]   = sprintf ( "%01.4f" , $breakdown[ $date ][ $id ][ revenue_total ] );
-										$breakdown[ $date ][ $id ][ affiliate_total ] = sprintf ( "%01.4f" , $breakdown[ $date ][ $id ][ affiliate_total ] );
-										$bd_net                                       = sprintf ( "%01.4f" , $breakdown[ $date ][ $id ][ gross_total ] - $breakdown[ $date ][ $id ][ affiliate_total ] );
+										$breakdown[ $date ][ $id ][ gross_total ]     = sprintf ( "%01.3f" , $breakdown[ $date ][ $id ][ gross_total ] );
+										$breakdown[ $date ][ $id ][ revenue_total ]   = sprintf ( "%01.3f" , $breakdown[ $date ][ $id ][ revenue_total ] );
+										$breakdown[ $date ][ $id ][ affiliate_total ] = sprintf ( "%01.3f" , $breakdown[ $date ][ $id ][ affiliate_total ] );
+										$bd_net                                       = sprintf ( "%01.3f" , $breakdown[ $date ][ $id ][ gross_total ] - $breakdown[ $date ][ $id ][ affiliate_total ] );
 										$interim                                      = '';
 										if ( $breakdown[ $date ][ $id ][ num_interim_clicks ] ) {
 												$interim = $breakdown[ $date ][ $id ][ num_interim_clicks ];
@@ -1273,10 +1273,10 @@
 						}
 				}
 				$report_form   = jackhammer_report_form ();
-				$total_gross   = sprintf ( "%01.4f" , $total_gross );
-				$total_revenue = sprintf ( "%01.4f" , $total_revenue );
-				$total_aff     = sprintf ( "%01.4f" , $total_aff );
-				$total_net     = sprintf ( "%01.4f" , $total_net );
+				$total_gross   = sprintf ( "%01.3f" , $total_gross );
+				$total_revenue = sprintf ( "%01.3f" , $total_revenue );
+				$total_aff     = sprintf ( "%01.3f" , $total_aff );
+				$total_net     = sprintf ( "%01.3f" , $total_net );
 				if ( $CGI[ breakdown ] ) {
 						$language[ date_header ] = $CGI[ breakdown ];
 				}
@@ -1480,9 +1480,9 @@
 						## Break Down Each Price Level
 						foreach ( $keywords[ $keyword ] as $bidprice => $bpvals ) {
 								## Accumulate Totals for this keyword
-								$keywords[ $keyword ][ $bidprice ][ gross_total ]     = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ gross_total ] );
-								$keywords[ $keyword ][ $bidprice ][ revenue_total ]   = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] );
-								$keywords[ $keyword ][ $bidprice ][ affiliate_total ] = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
+								$keywords[ $keyword ][ $bidprice ][ gross_total ]     = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ gross_total ] );
+								$keywords[ $keyword ][ $bidprice ][ revenue_total ]   = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] );
+								$keywords[ $keyword ][ $bidprice ][ affiliate_total ] = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
 								$keyword_total_clicks += $keywords[ $keyword ][ $bidprice ][ click_count ];
 								$keyword_total_gross += $keywords[ $keyword ][ $bidprice ][ gross_total ];
 								$keyword_total_revenue += $keywords[ $keyword ][ $bidprice ][ revenue_total ];
@@ -1495,11 +1495,11 @@
 								$total_aff += $keywords[ $keyword ][ $bidprice ][ affiliate_total ];
 								//$total_net     = $keyword_total_revenue - $keyword_total_aff;
 								$total_net += $keyword_total_revenue - $keyword_total_aff; // ADDed + for total by AKhilesh on 5/4/2011
-								$showprice                                            = sprintf ( "%01.4f" , $bidprice );
-								$price_net                                            = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] - $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
-								$keywords[ $keyword ][ $bidprice ][ gross_total ]     = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ gross_total ] );
-								$keywords[ $keyword ][ $bidprice ][ revenue_total ]   = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] );
-								$keywords[ $keyword ][ $bidprice ][ affiliate_total ] = sprintf ( "%01.4f" , $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
+								$showprice                                            = sprintf ( "%01.3f" , $bidprice );
+								$price_net                                            = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] - $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
+								$keywords[ $keyword ][ $bidprice ][ gross_total ]     = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ gross_total ] );
+								$keywords[ $keyword ][ $bidprice ][ revenue_total ]   = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ revenue_total ] );
+								$keywords[ $keyword ][ $bidprice ][ affiliate_total ] = sprintf ( "%01.3f" , $keywords[ $keyword ][ $bidprice ][ affiliate_total ] );
 								// Printable Vars
 								$cc = $keywords[ $keyword ][ $bidprice ][ click_count ];
 								$gt = $keywords[ $keyword ][ $bidprice ][ gross_total ];
@@ -1538,10 +1538,10 @@
 						}
 						$encoded_key           = urlencode ( $keyword );
 						$link                  = $query_string . "&" . $date_qs . "&keyword=$encoded_key";
-						$keyword_total_gross   = sprintf ( "%01.4f" , $keyword_total_gross );
-						$keyword_total_revenue = sprintf ( "%01.4f" , $keyword_total_revenue );
-						$keyword_total_aff     = sprintf ( "%01.4f" , $keyword_total_aff );
-						$keyword_total_net     = sprintf ( "%01.4f" , $keyword_total_net );
+						$keyword_total_gross   = sprintf ( "%01.3f" , $keyword_total_gross );
+						$keyword_total_revenue = sprintf ( "%01.3f" , $keyword_total_revenue );
+						$keyword_total_aff     = sprintf ( "%01.3f" , $keyword_total_aff );
+						$keyword_total_net     = sprintf ( "%01.3f" , $keyword_total_net );
 						$TABLE .= "
                   <tr>
                      <td align='left' colspan='7'>
@@ -1581,10 +1581,10 @@
                ";
 				}
 				$report_form   = jackhammer_report_form ();
-				$total_gross   = sprintf ( "%01.4f" , $total_gross );
-				$total_revenue = sprintf ( "%01.4f" , $total_revenue );
-				$total_aff     = sprintf ( "%01.4f" , $total_aff );
-				$total_net     = sprintf ( "%01.4f" , $total_net );
+				$total_gross   = sprintf ( "%01.3f" , $total_gross );
+				$total_revenue = sprintf ( "%01.3f" , $total_revenue );
+				$total_aff     = sprintf ( "%01.3f" , $total_aff );
+				$total_net     = sprintf ( "%01.3f" , $total_net );
 
 				return "
 
@@ -1711,8 +1711,8 @@
 				$report_data = $oSQL->search ( array ( "SQL" => $SQL ) );
 				$TABLE       = "";
 				foreach ( $report_data as $hit ) {
-						$hit[ gross_price ] = sprintf ( "%01.4f" , $hit[ gross_price ] );
-						$hit[ price ]       = sprintf ( "%01.4f" , $hit[ price ] );
+						$hit[ gross_price ] = sprintf ( "%01.3f" , $hit[ gross_price ] );
+						$hit[ price ]       = sprintf ( "%01.3f" , $hit[ price ] );
 						$date               = $hit[ hit_date ];
 						$date               = substr ( $date , 0 , 6 );
 						$TABLE .= "
@@ -2118,6 +2118,7 @@
 
 		function view_click ()
 		{
+                    
 				global $SCRIPT_NAME;
 				global $language;
 				global $oSQL;
@@ -2132,6 +2133,7 @@
 				$SQL    = "SELECT * FROM $tablename WHERE hit_id = '$hit_id'";
 				$click  = $oSQL->search ( array ( "SQL" => $SQL , "Return" => "hash" ) );
 				$date   = date ( "m/d/Y h:s a" , $click[ hit_time ] );
+                                
 				$output = "
 
           <br /><br />
@@ -2154,7 +2156,10 @@
                     <td>Keyword</td><td>$click[word]</td>
               </tr>
               <tr bgcolor='#e0e0e0'>
-                    <td>Bid Price</td><td>$click[price]</td>
+                    <td>Gross Bid Price</td><td>$click[gross_price]</td>
+              </tr>
+              <tr bgcolor='#e0e0e0'>
+                    <td>Net Bid Price</td><td>$click[price]</td>
               </tr>
               <tr bgcolor='#e0e0e0'>
                     <td>Affiliate</td><td>$click[affiliate]</td>
@@ -2239,6 +2244,7 @@
 				$SQL    = "SELECT * FROM $tablename WHERE hit_id = '$hit_id'";
 				$click  = $oSQL->search ( array ( "SQL" => $SQL , "Return" => "hash" ) );
 				$date   = date ( "m/d/Y h:s a" , $click[ click_tstamp ] );
+                               
 				$output = "
           <table border=0 cellspacing=1 cellpadding=5 bgcolor='black'>
 
@@ -2259,7 +2265,10 @@
                     <td>Keyword</td><td>$click[word]</td>
               </tr>
               <tr bgcolor='#e0e0e0'>
-                    <td>Bid Price</td><td>$click[price]</td>
+                    <td>Gross Bid Price</td><td>$click[price]</td>
+              </tr>
+              <tr bgcolor='#e0e0e0'>
+                    <td>Net Bid Price</td><td>$click[price]</td>
               </tr>
               <tr bgcolor='#e0e0e0'>
                     <td>Affiliate</td><td>$click[affiliate]</td>
@@ -2339,8 +2348,8 @@
 						$ctr = $search_stats[ num_clicks ] / $search_stats[ num_searches ];
 				}
 				## Cleanup the numbers ....
-				$average_click_gross = sprintf ( "%01.4f" , $average_click_gross );
-				$average_click_net   = sprintf ( "%01.4f" , $average_click_net );
+				$average_click_gross = sprintf ( "%01.3f" , $average_click_gross );
+				$average_click_net   = sprintf ( "%01.3f" , $average_click_net );
 				$ctr                 = sprintf ( "%2.3f" , $ctr );
 				$report              = "
 
@@ -2437,8 +2446,8 @@
 				foreach ( $stats as $keyword ) {
 						$num_searches = number_format ( $keyword[ num_searches ] , 0 , '.' , ',' );
 						$num_clicks   = number_format ( $keyword[ click_count ] , 0 , '.' , ',' );
-						$gross_ppc    = sprintf ( '%01.4f' , $keyword[ gross_ppc ] );
-						$net_ppc      = sprintf ( '%01.4f' , $keyword[ net_ppc ] );
+						$gross_ppc    = sprintf ( '%01.3f' , $keyword[ gross_ppc ] );
+						$net_ppc      = sprintf ( '%01.3f' , $keyword[ net_ppc ] );
 						$criteria     = $keyword[ criteria ];
 						$ekey         = urlencode ( $criteria );
 						if ( $CGI[ 'categoriesonly' ] ) {

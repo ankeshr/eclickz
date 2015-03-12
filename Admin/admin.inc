@@ -327,7 +327,7 @@ END;
 						global $data_dir;
 						global $include_dir;
 						global $LICENSE_TYPE;
-						global $ADMIN_TYPE;
+						global $admin_add_userTYPE;
 						global $fatal_system_errors;
 						$patches     = '';
 						$patchlist   = '';
@@ -531,13 +531,12 @@ END;
 						// URLS //
 						$base     = "http://" . $HTTP_HOST . $SCRIPT_NAME;
 						$base     = preg_replace ( "/admin.php/i" , "" , $base );
-						$search   = $config['search_url'] . "search.php";
-						$accounts = $config['jackhammer_accounts_url'] . "accounts.php";
-						$signup   = $config['jackhammer_accounts_url'] . "signup/";
+						$search   = $base . "search.php";
+						$accounts = $base . "accounts.php";
 						$urls     = "
               <fieldset style='padding:5px;font-family:verdana,arial; font-size:9pt;'>
                 <legend style='font-size:12px; font-weight:bold;'>Links</legend>
-                  <a href='$signup' target='new'>Advertiser Signup</a>
+                  <a href='$accounts?action=create' target='new'>Advertiser Signup</a>
                   <br />
                   <a href='$accounts' target='new'>Advertiser Login</a>
                   <br />
@@ -977,6 +976,7 @@ END;
 				// --------------------------------------------------------------------- //
 				function edit_options ()
 				{
+                                     //die('here');
 						global $CGI;
 						global $config;
 						global $language;
@@ -987,30 +987,42 @@ END;
 						global $ADMIN_TYPE;
 						global $PROGRAMS;
 						$designer_mode = 0;
+                                               // echo '<pre>';
+                                               //  print_r($CGI);
+                                               //  echo '</pre>';
 						if ( preg_match ( "/design/" , $SCRIPT_NAME ) ) {
 								$designer_mode = 1;
 						}
+
 						$setting = $CGI[ 'option' ];
+
 						// If this is a differen theme, read in it's file, overwriting the default config settings
 						if ( $CGI[ theme ] != "default" ) {
 								$file = "$data_dir/config/$CGI[theme].inc";
+                //echo $file;die();
+                                                               
 								if ( file_exists ( $file ) ) {
 										$config = array ();
 										include ( $file );
 								}
 						}
+           // echo $file;
 						// Read in all of the options, saving out just the option needed //
 						$base_admin_dir = $include_dir . "/dsX/Admin/config/";
+           // echo $base_admin_dir;
 						if ( is_dir ( $base_admin_dir ) ) {
 								$PROGRAMS = array ();
 								if ( $handle = opendir ( $base_admin_dir ) ) {
 										while ( false !== ( $file = readdir ( $handle ) ) ) {
 												if ( preg_match ( "/\.inc/i" , $file ) ) {
+                                                                                                     
 														$appname = preg_replace ( "/\.inc/" , "" , $file );
 														// $PROGRAMS[$file] = 1;
 														$fname = $base_admin_dir . $file;
+
 														include_once ( $fname );
 														$setting_func = "config_" . $appname;
+                            //echo $setting_func;
 														call_user_func ( $setting_func );
 												}
 										}
@@ -1040,8 +1052,12 @@ END;
 						}
 						$options = "";
 						ksort ( $vars[ $setting ] );
+//                                                echo '<pre>';
+//                                                print_r($vars[ $setting ]);
+//                                                echo '</pre>';
 						foreach ( $vars[ $setting ] as $varname => $array ) {
-								list ( $prompt , $type , $default , $mode ) = $array;
+                                                    //echo $config[ $varname ];
+								list ( $prompt , $type , $default , $mode ) = $array;//echo $default;
 								if ( $ADMIN_TYPE != 'administrator' ) {
 										if ( $ADMIN_TYPE == "designer" && $mode != "design" ) {
 												continue;
@@ -1057,6 +1073,7 @@ END;
 								}
 								if ( $type == "TEXT" ) {
 										$userinput = " <input name='$varname' value='$config[$varname]' size='40'> ";
+                                                                                
 								} elseif ( $type == "TEXTAREA" ) {
 										$userinput = " <textarea name='$varname' rows='5' cols='40'>$config[$varname]</textarea> ";
 								} elseif ( $type == "CHECKBOX" ) {
@@ -1086,6 +1103,7 @@ END;
 																$selected = "SELECTED";
 														} elseif ( $type == "SELECT" && $config[ $varname ] == $eoption ) {
 																$selected = "SELECTED";
+                                                                                                                                //echo $eoption;
 														} else {
 																$selected = "";
 														}
@@ -1106,12 +1124,14 @@ END;
                  <td valign='top'>$userinput</td>
                </tr>
               ";
+                                                                                
 								}
 						}
 						$options .= "
+
            <tr style='background:#e0e0e0'>
              <td colspan=2>
-              <center><input type='submit' value='$language[save_options_button]'>
+              <center><input type='submit' value='$language[save_options_button]'> 
               <input type='hidden' name='action' value='save_options'>
               <input type='hidden' name='password' value='$config[admin_pw]'>
               <input type='hidden' name='theme' value='$CGI[theme]'>
@@ -1160,6 +1180,7 @@ END;
 						global $data_dir;
 						global $config;
 						global $LICENSE_TYPE;
+            //print_r($_POST); die;
 						// Prevent lite and demo users from turning off backfill //
 						if ( !preg_match ( "/unlimited|source/i" , $LICENSE_TYPE ) ) {
 								if ( !empty( $CGI[ 'supplemental_results' ] ) && $CGI[ 'supplemental_results' ] == "NO" ) {
